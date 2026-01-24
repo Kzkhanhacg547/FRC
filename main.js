@@ -12,7 +12,7 @@ const bcrypt = require("bcrypt");
 require("dotenv").config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 const SECRET_KEY = process.env.SECRET_KEY || "frc-qn-secret-key-2025";
 
 // ============ CORS - Allow ALL ============
@@ -416,3 +416,4 @@ app.listen(PORT, () => {
 ╚════════════════════════════════════════╝
   `);
 });
+
