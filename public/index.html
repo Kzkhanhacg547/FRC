@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FPTU Robotics Club - FRC Quy Nhơn</title>
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0a0e27;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.bg-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.stars-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 
+        0 0 6px rgba(100, 200, 255, 0.9),
+        0 0 12px rgba(50, 150, 255, 0.7),
+        0 0 18px rgba(0, 100, 255, 0.4);
+    animation: twinkle linear infinite, fall linear infinite;
+}
+
+@keyframes twinkle {
+    0%, 100% { 
+        opacity: 0.5; 
+        transform: scale(1);
+    }
+    50% { 
+        opacity: 1; 
+        transform: scale(1.4);
+    }
+}
+
+@keyframes fall {
+    0% { transform: translate(0, -20px); }
+    100% { transform: translate(70vw, 120vh); }
+}
+
+.glow-orb {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.2;
+}
+
+.orb-1 {
+    background: radial-gradient(circle, #0099ff, #0066cc);
+    top: -200px;
+    left: -200px;
+    animation: float 20s ease-in-out infinite;
+}
+
+.orb-2 {
+    background: radial-gradient(circle, #00d4ff, #0099ff);
+    bottom: -200px;
+    right: -200px;
+    animation: float 25s ease-in-out infinite reverse;
+}
+
+.orb-3 {
+    background: radial-gradient(circle, #0066ff, #0099ff);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: pulse 15s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(120px, 100px) scale(1.1); }
+    66% { transform: translate(-100px, 120px) scale(0.95); }
+}
+
+@keyframes pulse {
+    0%, 100% { 
+        transform: translate(-50%, -50%) scale(1); 
+        opacity: 0.15; 
+    }
+    50% { 
+        transform: translate(-50%, -50%) scale(1.4); 
+        opacity: 0.25; 
+    }
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 50px 40px 100px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Navigation với glassmorphism */
+.nav {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 60px;
+    flex-wrap: wrap;
+}
+
+.nav-btn {
+    padding: 14px 32px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95em;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(20px);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(0, 153, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+}
+
+.nav-btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.nav-btn:hover {
+    background: rgba(0, 153, 255, 0.15);
+    border-color: rgba(0, 153, 255, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0, 153, 255, 0.25);
+}
+
+.nav-btn.active {
+    background: rgba(0, 153, 255, 0.2);
+    border-color: rgba(0, 153, 255, 0.5);
+    box-shadow: 0 4px 24px rgba(0, 153, 255, 0.3);
+}
+
+.nav-btn span {
+    position: relative;
+    z-index: 1;
+}
+
+/* Header với animation mượt */
+.header {
+    text-align: center;
+    margin-bottom: 90px;
+    animation: fadeInDown 1s ease-out;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.logo-wrapper {
+    display: inline-block;
+    position: relative;
+    margin-bottom: 50px;
+}
+
+.logo-container {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+    animation: logoFloat 6s ease-in-out infinite;
+}
+
+@keyframes logoFloat {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+}
+
+.logo-container::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, 
+        #0099ff 0%, 
+        #00d4ff 25%, 
+        #0099ff 50%, 
+        #00d4ff 75%, 
+        #0099ff 100%
+    );
+    background-size: 400% 400%;
+    z-index: -1;
+    animation: gradientShift 8s ease infinite;
+    filter: blur(15px);
+}
+
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.logo-container::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    padding: 3px;
+    background: linear-gradient(45deg, #0099ff, #00d4ff, #0099ff);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: gradientShift 8s ease infinite;
+    background-size: 400% 400%;
+}
+
+.logo-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: #0a0e27;
+    border-radius: 50%;
+    box-shadow: 
+        0 0 60px rgba(0, 153, 255, 0.4),
+        inset 0 0 30px rgba(0, 153, 255, 0.15);
+}
+
+h1 {
+    color: #ffffff;
+    font-size: 3.5em;
+    font-weight: 800;
+    margin-bottom: 20px;
+    letter-spacing: -1.5px;
+    text-shadow: 0 0 40px rgba(0, 153, 255, 0.4);
+    background: linear-gradient(135deg, #ffffff 0%, #e0f2ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.subtitle {
+    color: #0099ff;
+    font-size: 1.5em;
+    font-weight: 600;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    margin-bottom: 25px;
+    text-shadow: 0 0 20px rgba(0, 153, 255, 0.5);
+}
+
+.tagline {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 1.2em;
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.9;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+}
+
+/* Content Grid với bố cục mềm mại */
+.content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 30px;
+    margin-bottom: 80px;
+    animation: fadeInUp 1s ease-out 0.3s backwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    padding: 45px 40px;
+    backdrop-filter: blur(30px);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        #0099ff 50%, 
+        transparent 100%
+    );
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+        circle,
+        rgba(0, 153, 255, 0.1) 0%,
+        transparent 70%
+    );
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.card:hover::before,
+.card:hover::after {
+    opacity: 1;
+}
+
+.card:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(0, 153, 255, 0.3);
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: 
+        0 20px 60px rgba(0, 153, 255, 0.25),
+        0 0 80px rgba(0, 153, 255, 0.15);
+}
+
+.card-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, 
+        rgba(0, 153, 255, 0.8) 0%, 
+        rgba(0, 212, 255, 0.8) 100%
+    );
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+    box-shadow: 
+        0 10px 30px rgba(0, 153, 255, 0.4),
+        inset 0 -2px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.card-icon::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #0099ff, #00d4ff);
+    opacity: 0;
+    filter: blur(10px);
+    transition: opacity 0.5s ease;
+}
+
+.card:hover .card-icon {
+    transform: scale(1.15) rotate(-5deg);
+    box-shadow: 
+        0 15px 40px rgba(0, 153, 255, 0.6),
+        inset 0 -2px 15px rgba(0, 0, 0, 0.3);
+}
+
+.card:hover .card-icon::before {
+    opacity: 0.6;
+}
+
+.card-icon svg {
+    width: 36px;
+    height: 36px;
+    color: #fff;
+    position: relative;
+    z-index: 1;
+}
+
+.card h3 {
+    color: #ffffff;
+    font-size: 1.4em;
+    margin-bottom: 18px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+}
+
+.card p {
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.9;
+    font-size: 1em;
+}
+
+/* Info Section với glassmorphism */
+.info-section {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 28px;
+    padding: 50px 45px;
+    margin-bottom: 60px;
+    backdrop-filter: blur(30px);
+    animation: fadeInUp 1s ease-out 0.5s backwards;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 28px;
+    font-size: 1.05em;
+    padding: 22px 25px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.info-item:hover {
+    background: rgba(0, 153, 255, 0.08);
+    border-color: rgba(0, 153, 255, 0.25);
+    transform: translateX(10px);
+    box-shadow: 0 4px 20px rgba(0, 153, 255, 0.15);
+}
+
+.info-item:last-child {
+    margin-bottom: 0;
+}
+
+.info-item svg {
+    width: 28px;
+    height: 28px;
+    margin-right: 20px;
+    color: #0099ff;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 8px rgba(0, 153, 255, 0.6));
+}
+
+/* Social Section */
+.social-section {
+    text-align: center;
+    animation: fadeInUp 1s ease-out 0.7s backwards;
+}
+
+.section-title {
+    color: #ffffff;
+    font-size: 2.2em;
+    margin-bottom: 50px;
+    font-weight: 700;
+    letter-spacing: -0.8px;
+    text-shadow: 0 0 30px rgba(0, 153, 255, 0.3);
+}
+
+.social-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.social-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 20px 32px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.98em;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(20px);
+    position: relative;
+    overflow: hidden;
+}
+
+.social-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 153, 255, 0.4), transparent);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+}
+
+.social-btn:hover::before {
+    width: 400px;
+    height: 400px;
+}
+
+.social-btn:hover {
+    background: rgba(0, 153, 255, 0.12);
+    border-color: rgba(0, 153, 255, 0.4);
+    box-shadow: 0 8px 32px rgba(0, 153, 255, 0.3);
+    transform: translateY(-4px);
+}
+
+.social-btn svg {
+    width: 24px;
+    height: 24px;
+    position: relative;
+    z-index: 1;
+}
+
+.social-btn span {
+    position: relative;
+    z-index: 1;
+}
+
+/* Posts Section */
+.posts-section {
+    margin-top: 80px;
+    animation: fadeInUp 1s ease-out 0.5s backwards;
+}
+
+.posts-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 50px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.posts-count {
+    background: rgba(0, 153, 255, 0.15);
+    color: #00d4ff;
+    padding: 10px 22px;
+    border-radius: 24px;
+    font-size: 0.9em;
+    font-weight: 600;
+    border: 1px solid rgba(0, 153, 255, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.post-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    padding: 40px;
+    margin-bottom: 28px;
+    backdrop-filter: blur(30px);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.post-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+    background: linear-gradient(180deg, #0099ff, #00d4ff);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.post-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: radial-gradient(
+        circle at top right,
+        rgba(0, 153, 255, 0.1) 0%,
+        transparent 60%
+    );
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.post-card:hover::before,
+.post-card:hover::after {
+    opacity: 1;
+}
+
+.post-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(0, 153, 255, 0.3);
+    transform: translateX(12px);
+    box-shadow: 
+        0 16px 48px rgba(0, 153, 255, 0.2),
+        -8px 0 24px rgba(0, 153, 255, 0.1);
+}
+
+.post-header {
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 1;
+}
+
+.post-title {
+    color: #ffffff;
+    font-size: 1.7em;
+    font-weight: 600;
+    margin-bottom: 14px;
+    letter-spacing: -0.5px;
+}
+
+.post-meta {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9em;
+}
+
+.post-meta span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.post-content {
+    color: rgba(255, 255, 255, 0.75);
+    line-height: 1.9;
+    margin-bottom: 28px;
+    font-size: 1.02em;
+    position: relative;
+    z-index: 1;
+}
+
+.post-files {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    margin-top: 28px;
+    position: relative;
+    z-index: 1;
+}
+
+.file-preview {
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    aspect-ratio: 1;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.file-preview:hover {
+    transform: scale(1.08);
+    border-color: rgba(0, 153, 255, 0.4);
+    box-shadow: 0 8px 24px rgba(0, 153, 255, 0.3);
+}
+
+.file-preview img, .file-preview video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.file-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #0099ff;
+    font-size: 2.2em;
+    filter: drop-shadow(0 0 10px rgba(0, 153, 255, 0.5));
+}
+
+.empty-state {
+    text-align: center;
+    padding: 100px 20px;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.empty-state-icon {
+    font-size: 5em;
+    margin-bottom: 25px;
+    opacity: 0.3;
+}
+
+/* Admin Button */
+.admin-btn {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #0099ff 0%, #00d4ff 100%);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+    box-shadow: 
+        0 10px 30px rgba(0, 153, 255, 0.5),
+        0 0 60px rgba(0, 153, 255, 0.3);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-btn::before {
+    content: '';
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0099ff, #00d4ff);
+    opacity: 0;
+    filter: blur(15px);
+    transition: opacity 0.5s ease;
+}
+
+.admin-btn:hover::before {
+    opacity: 0.8;
+}
+
+.admin-btn:hover {
+    transform: scale(1.2) rotate(90deg);
+    box-shadow: 
+        0 15px 50px rgba(0, 153, 255, 0.7),
+        0 0 100px rgba(0, 153, 255, 0.5);
+}
+
+.admin-btn:active {
+    transform: scale(1.1) rotate(90deg);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        padding: 35px 25px 70px;
+    }
+
+    h1 {
+        font-size: 2.4em;
+    }
+
+    .subtitle {
+        font-size: 1.15em;
+        letter-spacing: 3px;
+    }
+
+    .tagline {
+        font-size: 1.05em;
+    }
+
+    .logo-container {
+        width: 180px;
+        height: 180px;
+    }
+
+    .content-grid {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+
+    .card {
+        padding: 35px 30px;
+    }
+
+    .info-section {
+        padding: 35px 30px;
+    }
+
+    .info-item {
+        padding: 18px 20px;
+    }
+
+    .social-links {
+        grid-template-columns: 1fr;
+    }
+
+    .post-files {
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    }
+
+    .admin-btn {
+        width: 60px;
+        height: 60px;
+        font-size: 24px;
+        bottom: 30px;
+        right: 30px;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="bg-animation">
+        <div class="stars-container" id="stars"></div>
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+        <div class="glow-orb orb-3"></div>
+    </div>
+
+    <div class="container">
+        <div class="nav">
+            <a href="/" class="nav-btn active" id="homeBtn"><span>🏠 Trang chủ</span></a>
+            <a href="/posts" class="nav-btn" id="postsBtn"><span>📚 Bài viết</span></a>
+        </div>
+
+        <div class="header">
+            <div class="logo-wrapper">
+                <div class="logo-container">
+                    <img src="https://files.catbox.moe/ue2k13.jpg" alt="FRC Logo" onerror="this.style.background='linear-gradient(135deg, #0099ff, #00d4ff)'">
+                </div>
+            </div>
+            <h1>FPTU Robotics Club</h1>
+            <p class="subtitle">FRC Quy Nhơn</p>
+            <p class="tagline">Innovate, Build, Inspire - Khơi nguồn đam mê, kiến tạo tương lai</p>
+        </div>
+
+        <div id="mainContent">
+            <!-- Home Content -->
+            <div id="homeContent">
+                <div class="content-grid">
+                    <div class="card">
+                        <div class="card-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                            </svg>
+                        </div>
+                        <h3>Research & Innovation</h3>
+                        <p>Nghiên cứu và phát triển công nghệ robotics, tự động hóa thông minh cho tương lai.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                        </div>
+                        <h3>Collaborative Community</h3>
+                        <p>Connecting engineers to advance robotics.</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                            </svg>
+                        </div>
+                        <h3>Technical Excellence</h3>
+                        <p>Mastering robotics through projects, competitions, and training.</p>
+                    </div>
+                </div>
+
+                <div class="info-section">
+                    <div class="info-item">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        <span>FPT University Quy Nhon, Quy Nhon, Vietnam</span>
+                    </div>
+                    <div class="info-item">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                        <span>frc.quynhon@gmail.com</span>
+                    </div>
+                </div>
+
+                <div class="social-section">
+                    <h2 class="section-title">Connect With Us</h2>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/frc.quynhon" target="_blank" class="social-btn">
+                            <svg fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                            Facebook
+                        </a>
+                        <a href="https://www.instagram.com/frc.qn" target="_blank" class="social-btn">
+                            <svg fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                            </svg>
+                            Instagram
+                        </a>
+                        <a href="https://tiktok.com/@fpturobotics.club" target="_blank" class="social-btn">
+                            <svg fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+                            </svg>
+                            TikTok
+                        </a>
+                        <a href="mailto:frc.quynhon@gmail.com" class="social-btn">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                            </svg>
+                            Email
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Posts Content -->
+            <div id="postsContent" style="display: none;">
+                <div class="posts-section">
+                    <h2 class="section-title">Bài viết mới nhất</h2>
+                    <div id="postsList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="admin-btn" onclick="window.location.href='/admin.html'" title="Admin Panel">⚙️</button>
+
+    <script>
+const sc = document.getElementById('stars');
+const n = 40;
+
+for (let i = 0; i < n; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    
+    const sz = Math.random() * 2.5 + 1.5;
+    s.style.width = sz + 'px';
+    s.style.height = sz + 'px';
+    
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = -10 + '%';
+    
+    const dur = Math.random() * 4 + 6;
+    s.style.animationDuration = `${Math.random() * 2 + 2}s, ${dur}s`;
+    s.style.animationDelay = `${Math.random() * 3}s, ${Math.random() * 5}s`;
+    
+    sc.appendChild(s);
+}
+
+// Navigation
+const homeBtn = document.getElementById('homeBtn');
+const postsBtn = document.getElementById('postsBtn');
+const homeContent = document.getElementById('homeContent');
+const postsContent = document.getElementById('postsContent');
+
+homeBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    homeBtn.classList.add('active');
+    postsBtn.classList.remove('active');
+    homeContent.style.display = 'block';
+    postsContent.style.display = 'none';
+    history.pushState(null, '', '/');
+});
+
+postsBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    postsBtn.classList.add('active');
+    homeBtn.classList.remove('active');
+    homeContent.style.display = 'none';
+    postsContent.style.display = 'block';
+    loadPosts();
+    history.pushState(null, '', '/posts');
+});
+
+// Load posts
+async function loadPosts() {
+    try {
+        const response = await fetch('http://localhost:3000/api/posts');
+        const posts = await response.json();
+        
+        const postsList = document.getElementById('postsList');
+        
+        if (posts.length === 0) {
+            postsList.innerHTML = '<p style="color: rgba(255,255,255,0.5); text-align: center;">Chưa có bài viết nào.</p>';
+            return;
+        }
+        
+        postsList.innerHTML = posts.map(post => `
+            <div class="post-card" onclick="window.location.href='/post.html?id=${post.id}'">
+                <div class="post-header">
+                    <h3 class="post-title">${post.title}</h3>
+                    <div class="post-meta">
+                        ${new Date(post.createdAt).toLocaleString('vi-VN')} • ${post.author}
+                    </div>
+                </div>
+                <div class="post-content">
+                    ${post.content.substring(0, 200)}${post.content.length > 200 ? '...' : ''}
+                </div>
+                ${post.files.length > 0 ? `
+                    <div class="post-files">
+                        ${post.files.slice(0, 4).map(file => {
+                            if (file.mimetype.startsWith('image/')) {
+                                return `<div class="file-preview"><img src="http://localhost:3000${file.url}" alt="${file.originalname}"></div>`;
+                            } else if (file.mimetype.startsWith('video/')) {
+                                return `<div class="file-preview"><video src="http://localhost:3000${file.url}"></video></div>`;
+                            } else {
+                                return `<div class="file-preview"><div class="file-icon">📄</div></div>`;
+                            }
+                        }).join('')}
+                        ${post.files.length > 4 ? `<div class="file-preview"><div class="file-icon">+${post.files.length - 4}</div></div>` : ''}
+                    </div>
+                ` : ''}
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error('Error loading posts:', error);
+    }
+}
+
+// Check URL on load
+if (window.location.pathname === '/posts') {
+    postsBtn.click();
+}
+    </script>
+</body>
+</html>
